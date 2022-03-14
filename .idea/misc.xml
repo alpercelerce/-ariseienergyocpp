@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/json_server_example/pom.xml" />
+        <option value="$PROJECT_DIR$/json-client-implementation/pom.xml" />
+        <option value="$PROJECT_DIR$/ocpp-1.6/pom.xml" />
+        <option value="$PROJECT_DIR$/ocpp-1.6/json-client-implementation/pom.xml" />
+        <option value="$PROJECT_DIR$/ocpp-1.6/json_server_example/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>
