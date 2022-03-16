@@ -8,6 +8,7 @@ import eu.chargetime.ocpp.model.Request;
 import eu.chargetime.ocpp.model.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /*
  * ChargeTime.eu - Java-OCA-OCPP
@@ -40,14 +41,14 @@ public class JSONClientSample {
     private static final Logger logger = LoggerFactory.getLogger(JSONClientSample.class);
 
     private IClientAPI client;
-    private ClientCoreProfile core;
+    private ClientCoreProfileCustom core;
 
     public void connect() throws Exception {
 
         logger.info("connect - " + "started");
 
         // The core profile is mandatory
-        core = new ClientCoreProfile(new ClientCoreEventHandler() {
+        core = new ClientCoreProfileCustom(new ClientCoreEventHandler() {
             @Override
             public ChangeAvailabilityConfirmation handleChangeAvailabilityRequest(ChangeAvailabilityRequest request) {
 
@@ -158,7 +159,7 @@ public class JSONClientSample {
     public void sendBootNotification() throws Exception {
 
         // Use the feature profile to help create event
-        Request request = core.createBootNotificationRequest("some vendor", "some model");
+        Request request = core.createBootNotificationRequest("ATESS", "EVA-07S-P", "17421A45753ch5");
 
         // Client returns a promise which will be filled once it receives a confirmation.
         client.send(request).whenComplete((s, ex) -> System.out.println(s));
