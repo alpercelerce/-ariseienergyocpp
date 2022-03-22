@@ -150,8 +150,8 @@ public class JSONClientSample {
                 return null; // returning null means unsupported feature
             }
         });
-        client = new JSONClient(core, "mySampleIdentity");
-        client.connect("ws://localhost:8887", null);
+        client = new JSONClient(core, "mySampleOCCPClinetIdentity");
+        client.connect("ws://20.107.186.160:8887", null);
 
         logger.info("connect - " + "finished");
     }

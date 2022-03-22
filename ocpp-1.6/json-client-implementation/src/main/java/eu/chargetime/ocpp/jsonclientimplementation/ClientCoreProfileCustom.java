@@ -13,6 +13,11 @@ public class ClientCoreProfileCustom extends ClientCoreProfile {
     public BootNotificationRequest createBootNotificationRequest(String vendor, String model, String chargeBoxSerialNumber) {
         BootNotificationRequest bNR = new BootNotificationRequest(vendor, model);
         bNR.setMeterSerialNumber(chargeBoxSerialNumber);
+        bNR.setChargePointSerialNumber("345675");
+        bNR.setFirmwareVersion("v1.6");
+        bNR.setIccid("89359201436831365884");
+        bNR.setImsi("084935541179413645");
+        bNR.setMeterType("single phase");
         return bNR;
     }
 }

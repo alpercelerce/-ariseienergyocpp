@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="json-server-implementation" />
-        <module name="ocpp-1.6" />
         <module name="json-client-implementation" />
       </profile>
     </annotationProcessing>

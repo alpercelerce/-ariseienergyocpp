@@ -12,4 +12,7 @@ public class ApplicationConfiguration {
 
     @Value("${server.port}")
     private Integer serverPort;
+
+    @Value("${server.address}")
+    private String serverAddress;
 }

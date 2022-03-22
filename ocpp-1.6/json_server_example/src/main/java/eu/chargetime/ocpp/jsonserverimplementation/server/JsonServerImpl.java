@@ -25,9 +25,9 @@ public class JsonServerImpl {
     @PostConstruct
     public void startServer() throws Exception {
 
-        logger.info("localhost:" + applicationConfiguration.getServerPort() + " is going to be running...");
+        logger.info(applicationConfiguration.getServerAddress() + ":" + applicationConfiguration.getServerPort() + " is going to be running...");
 
-        server.open("localhost", applicationConfiguration.getServerPort(), serverEvents);
+        server.open(applicationConfiguration.getServerAddress(), applicationConfiguration.getServerPort(), serverEvents);
 
         logger.info("Server is up now");
 
