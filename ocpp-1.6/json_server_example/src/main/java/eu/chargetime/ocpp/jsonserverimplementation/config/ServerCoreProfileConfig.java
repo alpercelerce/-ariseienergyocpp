@@ -2,8 +2,10 @@ package eu.chargetime.ocpp.jsonserverimplementation.config;
 
 import eu.chargetime.ocpp.feature.profile.ServerCoreEventHandler;
 import eu.chargetime.ocpp.feature.profile.ServerCoreProfile;
+import eu.chargetime.ocpp.jsonserverimplementation.service.EVService;
 import eu.chargetime.ocpp.model.core.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +18,12 @@ import java.util.UUID;
 @Configuration
 @Getter
 @Slf4j
+@RequiredArgsConstructor
 public class ServerCoreProfileConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerCoreProfileConfig.class);
+
+    private final EVService evService;
 
     @Bean
     public ServerCoreEventHandler getCoreEventHandler() {
@@ -44,6 +49,7 @@ public class ServerCoreProfileConfig {
 
                 System.out.println(request);
                 // ... handle event
+                evService.bootNotification(sessionIndex, request);
 
                 return new BootNotificationConfirmation(ZonedDateTime.now(), 3000, RegistrationStatus.Accepted); // returning null means unsupported feature
             }
@@ -64,6 +70,7 @@ public class ServerCoreProfileConfig {
 
                 System.out.println(request);
                 // ... handle event
+                evService.heartBeat(sessionIndex.toString(), request.validate());
 
                 return  new HeartbeatConfirmation(ZonedDateTime.now()); // returning null means unsupported feature
             }

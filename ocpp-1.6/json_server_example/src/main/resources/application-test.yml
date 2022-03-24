@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/iEnergy
+    username: iEnergy
+    password: ff0299b2-17f2-4be8-b98c-948f6755286f
+    hikari:
+      poolName: Hikari
+      auto-commit: false
