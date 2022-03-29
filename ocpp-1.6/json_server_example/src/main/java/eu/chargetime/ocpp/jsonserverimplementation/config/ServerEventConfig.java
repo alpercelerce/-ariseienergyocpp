@@ -29,7 +29,7 @@ public class ServerEventConfig {
             @Override
             public void newSession(UUID sessionIndex, SessionInformation information) {
                 System.out.println("New session " + sessionIndex + ": " + information.getIdentifier());
-                evService.startConnection(sessionIndex.toString());
+                evService.startConnection(sessionIndex.toString(), information.getIdentifier());
             }
 
             @Override

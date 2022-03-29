@@ -4,4 +4,5 @@ import eu.chargetime.ocpp.jsonserverimplementation.entity.EVChargePointConfigura
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EVChargePointConfigurationRepository extends JpaRepository<EVChargePointConfiguration, Long> {
+    EVChargePointConfiguration findByChargeBoxSerialNumber(String chargeBoxSerialNumber);
 }

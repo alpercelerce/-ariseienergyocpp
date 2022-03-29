@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface EVConnectionRepository extends JpaRepository<EVConnection, Long> {
     List<EVConnection> findAllBySessionId(String sessionId);
+    EVConnection findByIdentifier(String identifier);
     List<EVConnection> findAllBySessionIdAndConnectionStatus(String sessionId, ConnectionStatus connectionStatus);
 }

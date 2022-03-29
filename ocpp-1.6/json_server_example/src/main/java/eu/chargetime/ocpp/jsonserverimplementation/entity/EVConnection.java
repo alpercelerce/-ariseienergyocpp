@@ -28,6 +28,8 @@ public class EVConnection {
 
     private ConnectionStatus connectionStatus;
 
+    private String identifier;
+
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

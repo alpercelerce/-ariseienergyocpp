@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -25,13 +26,20 @@ public class EVServiceImpl implements EVService {
     private final EVChargePointConfigurationRepository evChargePointConfigurationRepository;
 
     @Override
-    public void startConnection(String sessionId) {
-        EVConnection evConnection = new EVConnection();
-        evConnection.setConnectionStatus(ConnectionStatus.OPEN);
-        evConnection.setSessionId(sessionId);
-        evConnection.setCreateTime(LocalDateTime.now());
+    public void startConnection(String sessionId, String identifier) {
+        EVConnection connection = evConnectionRepository.findByIdentifier(identifier);
 
-        evConnectionRepository.save(evConnection);
+        if (Objects.isNull(connection)) {
+            connection = new EVConnection();
+            connection.setConnectionStatus(ConnectionStatus.OPEN);
+            connection.setSessionId(sessionId);
+            connection.setCreateTime(LocalDateTime.now());
+            connection.setIdentifier(identifier);
+        } else {
+            connection.setConnectionStatus(ConnectionStatus.OPEN);
+        }
+
+        evConnectionRepository.save(connection);
     }
 
     @Override
@@ -65,20 +73,29 @@ public class EVServiceImpl implements EVService {
         List<EVConnection> sessions = evConnectionRepository.findAllBySessionId(sessionIndex.toString());
 
         if (!CollectionUtils.isEmpty(sessions)) {
-            EVChargePointConfiguration chargePointConfiguration = new EVChargePointConfiguration();
-            chargePointConfiguration.setSession(sessions.get(0));
-            chargePointConfiguration.setCreateTime(LocalDateTime.now());
-            chargePointConfiguration.setChargePointModel(request.getChargePointModel());
-            chargePointConfiguration.setChargePointVendor(request.getChargePointVendor());
-            chargePointConfiguration.setChargeBoxSerialNumber(request.getChargePointSerialNumber());
-            chargePointConfiguration.setChargePointSerialNumber(request.getChargePointSerialNumber());
-            chargePointConfiguration.setFirmwareVersion(request.getFirmwareVersion());
-            chargePointConfiguration.setIccid(request.getIccid());
-            chargePointConfiguration.setImsi(request.getImsi());
-            chargePointConfiguration.setMeterType(request.getMeterType());
-            chargePointConfiguration.setMeterSerialNumber(request.getMeterSerialNumber());
+            EVChargePointConfiguration evChargePoint = evChargePointConfigurationRepository.findByChargeBoxSerialNumber(request.getChargePointSerialNumber());
 
-            evChargePointConfigurationRepository.save(chargePointConfiguration);
+            if (Objects.isNull(evChargePoint)) {
+                evChargePoint = new EVChargePointConfiguration();
+                evChargePoint.setSession(sessions.get(0));
+                evChargePoint.setCreateTime(LocalDateTime.now());
+                evChargePoint.setChargePointModel(request.getChargePointModel());
+                evChargePoint.setChargePointVendor(request.getChargePointVendor());
+                evChargePoint.setChargeBoxSerialNumber(request.getChargePointSerialNumber());
+                evChargePoint.setChargePointSerialNumber(request.getChargePointSerialNumber());
+                evChargePoint.setFirmwareVersion(request.getFirmwareVersion());
+                evChargePoint.setIccid(request.getIccid());
+                evChargePoint.setImsi(request.getImsi());
+                evChargePoint.setMeterType(request.getMeterType());
+                evChargePoint.setMeterSerialNumber(request.getMeterSerialNumber());
+            } else  {
+                evChargePoint.setFirmwareVersion(request.getFirmwareVersion());
+                evChargePoint.setIccid(request.getIccid());
+                evChargePoint.setImsi(request.getImsi());
+                evChargePoint.setMeterType(request.getMeterType());
+            }
+
+            evChargePointConfigurationRepository.save(evChargePoint);
         }
     }
 }

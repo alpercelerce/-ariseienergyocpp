@@ -5,7 +5,7 @@ import eu.chargetime.ocpp.model.core.BootNotificationRequest;
 import java.util.UUID;
 
 public interface EVService {
-    void startConnection(String sessionId);
+    void startConnection(String sessionId, String identifier);
 
     void stopConnection(String sessionId);
 
