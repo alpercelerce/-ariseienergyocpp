@@ -6,7 +6,7 @@ import eu.chargetime.ocpp.model.core.BootNotificationRequest;
 
 public class ClientCoreProfileCustom extends ClientCoreProfile {
 
-    public ClientCoreProfileCustom(ClientCoreEventHandler handler) {
+    public ClientCoreProfileCustom(CustomClientCoreEventHandler handler) {
         super(handler);
     }
 

@@ -48,7 +48,7 @@ public class JSONClientSample {
         logger.info("connect - " + "started");
 
         // The core profile is mandatory
-        core = new ClientCoreProfileCustom(new ClientCoreEventHandler() {
+        core = new ClientCoreProfileCustom(new CustomClientCoreEventHandler() {
             @Override
             public ChangeAvailabilityConfirmation handleChangeAvailabilityRequest(ChangeAvailabilityRequest request) {
 
@@ -127,6 +127,28 @@ public class JSONClientSample {
             }
 
             @Override
+            public StartTransactionConfirmation handleStartTransactionRequest(StartTransactionRequest request) {
+
+                logger.info("handleStartTransactionRequest - " + request.toString());
+
+                System.out.println(request);
+                // ... handle event
+
+                return null; // returning null means unsupported feature
+            }
+
+            @Override
+            public StopTransactionConfirmation handleStopTransactionRequest(StopTransactionRequest request) {
+
+                logger.info("handleStopTransactionRequest - " + request.toString());
+
+                System.out.println(request);
+                // ... handle event
+
+                return null; // returning null means unsupported feature
+            }
+
+            @Override
             public ResetConfirmation handleResetRequest(ResetRequest request) {
 
                 logger.info("handleResetRequest - " + request.toString());
@@ -149,6 +171,19 @@ public class JSONClientSample {
 
                 return null; // returning null means unsupported feature
             }
+
+            @Override
+            public MeterValuesConfirmation handleMeterValuesRequest(MeterValuesRequest request) {
+
+                logger.info("handleMeterValuesRequest - " + request.toString());
+
+
+                System.out.println(request);
+                // ... handle event
+
+                return null; // returning null means unsupported feature
+            }
+
         });
         client = new JSONClient(core, "OCCPLocalClinetIdentity1");
         client.connect("ws://20.107.186.160:8887", null);
