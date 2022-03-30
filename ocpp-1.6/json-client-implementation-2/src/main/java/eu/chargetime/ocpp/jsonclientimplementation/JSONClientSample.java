@@ -150,7 +150,7 @@ public class JSONClientSample {
                 return null; // returning null means unsupported feature
             }
         });
-        client = new JSONClient(core, "OCCPLocalClinetIdentity1");
+        client = new JSONClient(core, "OCCPLocalClinetIdentity2");
         client.connect("ws://20.107.186.160:8887", null);
 
         logger.info("connect - " + "finished");
@@ -159,7 +159,7 @@ public class JSONClientSample {
     public void sendBootNotification() throws Exception {
 
         // Use the feature profile to help create event
-        Request request = core.createBootNotificationRequest("ATESS1", "EVA-07S-P", "17421A45753ch6");
+        Request request = core.createBootNotificationRequest("ATESS 2", "EVA-07S-P", "17421A45753ch7");
 
         // Client returns a promise which will be filled once it receives a confirmation.
         client.send(request).whenComplete((s, ex) -> System.out.println(s));

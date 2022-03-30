@@ -18,6 +18,7 @@
 
     <modules>
         <module>json-client-implementation</module>
+        <module>json-client-implementation-2</module>
         <module>json_server_example</module>
     </modules>
 
