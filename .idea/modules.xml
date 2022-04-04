@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/arise-ienergy-ocpp.iml" filepath="$PROJECT_DIR$/.idea/arise-ienergy-ocpp.iml" />
       <module fileurl="file://$PROJECT_DIR$/ocpp-1.6/json-client-implementation/json-client-implementation.iml" filepath="$PROJECT_DIR$/ocpp-1.6/json-client-implementation/json-client-implementation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ocpp-1.6/json-client-implementation-2/json-client-implementation-2.iml" filepath="$PROJECT_DIR$/ocpp-1.6/json-client-implementation-2/json-client-implementation-2.iml" />
       <module fileurl="file://$PROJECT_DIR$/ocpp-1.6/json_server_example/json-server-implementation.iml" filepath="$PROJECT_DIR$/ocpp-1.6/json_server_example/json-server-implementation.iml" />
       <module fileurl="file://$PROJECT_DIR$/ocpp-1.6/ocpp-1.6.iml" filepath="$PROJECT_DIR$/ocpp-1.6/ocpp-1.6.iml" />
     </modules>

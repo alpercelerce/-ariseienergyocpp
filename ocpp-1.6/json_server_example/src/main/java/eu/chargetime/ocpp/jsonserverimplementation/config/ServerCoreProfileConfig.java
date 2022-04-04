@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.ZonedDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 @Configuration
@@ -24,6 +25,7 @@ public class ServerCoreProfileConfig {
     private static final Logger logger = LoggerFactory.getLogger(ServerCoreProfileConfig.class);
 
     private final EVService evService;
+    private final Random rnd = new Random();
 
     @Bean
     public ServerCoreEventHandler getCoreEventHandler() {
@@ -80,17 +82,29 @@ public class ServerCoreProfileConfig {
 
                 System.out.println(request);
                 // ... handle event
+                evService.meterValues(sessionIndex, request);
 
-                return null; // returning null means unsupported feature
+                return new MeterValuesConfirmation(); // returning null means unsupported feature
             }
 
             @Override
             public StartTransactionConfirmation handleStartTransactionRequest(UUID sessionIndex, StartTransactionRequest request) {
 
+                System.out.println("Handle start transaction !");
                 System.out.println(request);
                 // ... handle event
 
-                return null; // returning null means unsupported feature
+                IdTagInfo idTagInfo = new IdTagInfo(AuthorizationStatus.Accepted); // TODO: for now
+                idTagInfo.setParentIdTag("TEST");
+                idTagInfo.setExpiryDate(ZonedDateTime.now());
+                int generatedTransactionId = rnd.nextInt();
+
+                logger.info("GENERATED TRANSACTION ID is {} FOR START TRANSACTION REQUEST", generatedTransactionId);
+                StartTransactionConfirmation startTransactionConfirmation = new StartTransactionConfirmation(idTagInfo, generatedTransactionId);
+                logger.info("START TRANSACTION CONFIRMATION = {}", startTransactionConfirmation);
+                evService.startTransaction(sessionIndex, request);
+
+                return startTransactionConfirmation; // returning null means unsupported feature
             }
 
             @Override
@@ -103,6 +117,7 @@ public class ServerCoreProfileConfig {
 
                 System.out.println(request);
                 // ... handle event
+                evService.chargingStatus(sessionIndex, request);
 
                 return new StatusNotificationConfirmation(); // returning null means unsupported feature
             }
@@ -110,10 +125,20 @@ public class ServerCoreProfileConfig {
             @Override
             public StopTransactionConfirmation handleStopTransactionRequest(UUID sessionIndex, StopTransactionRequest request) {
 
+                System.out.println("Handle stop transaction !");
                 System.out.println(request);
                 // ... handle event
 
-                return null; // returning null means unsupported feature
+                IdTagInfo idTagInfo = new IdTagInfo(AuthorizationStatus.Accepted); // TODO: for now
+                idTagInfo.setParentIdTag("TEST");
+                idTagInfo.setExpiryDate(ZonedDateTime.now());
+
+                StopTransactionConfirmation stopTransactionConfirmation = new StopTransactionConfirmation();
+                stopTransactionConfirmation.setIdTagInfo(idTagInfo);
+
+                evService.stopTransaction(sessionIndex, request);
+                logger.info("STOP TRANSACTION CONFIRMATION = {}", stopTransactionConfirmation);
+                return stopTransactionConfirmation; // returning null means unsupported feature
             }
         };
     }

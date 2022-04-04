@@ -9,10 +9,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="json-server-implementation" />
         <module name="json-client-implementation" />
+        <module name="json-client-implementation-2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="json-client-implementation" target="11" />
+      <module name="json-client-implementation-2" target="11" />
       <module name="json-server-implementation" target="11" />
       <module name="ocpp-1.6" target="11" />
     </bytecodeTargetLevel>
@@ -20,6 +22,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="json-client-implementation" options="-parameters" />
+      <module name="json-client-implementation-2" options="-parameters" />
       <module name="json-server-implementation" options="-parameters" />
     </option>
   </component>

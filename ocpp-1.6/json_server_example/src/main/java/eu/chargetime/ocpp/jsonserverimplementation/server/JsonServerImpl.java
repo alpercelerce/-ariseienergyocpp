@@ -23,7 +23,7 @@ public class JsonServerImpl {
     private final ApplicationConfiguration applicationConfiguration;
 
     @PostConstruct
-    public void startServer() throws Exception {
+    public void startServer() {
 
         logger.info(applicationConfiguration.getServerAddress() + ":" + applicationConfiguration.getServerPort() + " is going to be running...");
 

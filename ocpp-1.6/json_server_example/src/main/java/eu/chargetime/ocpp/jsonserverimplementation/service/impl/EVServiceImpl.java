@@ -1,15 +1,29 @@
 package eu.chargetime.ocpp.jsonserverimplementation.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.chargetime.ocpp.jsonserverimplementation.entity.EVChargePointConfiguration;
+import eu.chargetime.ocpp.jsonserverimplementation.entity.EVChargingStatus;
 import eu.chargetime.ocpp.jsonserverimplementation.entity.EVConnection;
 import eu.chargetime.ocpp.jsonserverimplementation.entity.EVHeartbeat;
+import eu.chargetime.ocpp.jsonserverimplementation.entity.EVMeterValues;
+import eu.chargetime.ocpp.jsonserverimplementation.entity.EVTransaction;
 import eu.chargetime.ocpp.jsonserverimplementation.repository.EVChargePointConfigurationRepository;
+import eu.chargetime.ocpp.jsonserverimplementation.repository.EVChargingStatusRepository;
 import eu.chargetime.ocpp.jsonserverimplementation.repository.EVConnectionRepository;
 import eu.chargetime.ocpp.jsonserverimplementation.repository.EVHeartBeatRepository;
+import eu.chargetime.ocpp.jsonserverimplementation.repository.EVMeterValuesRepository;
+import eu.chargetime.ocpp.jsonserverimplementation.repository.EVTransactionRepository;
 import eu.chargetime.ocpp.jsonserverimplementation.service.EVService;
 import eu.chargetime.ocpp.jsonserverimplementation.type.ConnectionStatus;
+import eu.chargetime.ocpp.jsonserverimplementation.type.TransactionType;
 import eu.chargetime.ocpp.model.core.BootNotificationRequest;
+import eu.chargetime.ocpp.model.core.MeterValuesRequest;
+import eu.chargetime.ocpp.model.core.StartTransactionRequest;
+import eu.chargetime.ocpp.model.core.StatusNotificationRequest;
+import eu.chargetime.ocpp.model.core.StopTransactionRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,10 +34,15 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EVServiceImpl implements EVService {
     private final EVConnectionRepository evConnectionRepository;
     private final EVHeartBeatRepository evHeartBeatRepository;
     private final EVChargePointConfigurationRepository evChargePointConfigurationRepository;
+    private final EVChargingStatusRepository evChargingStatusRepository;
+    private final EVMeterValuesRepository evMeterValuesRepository;
+    private final EVTransactionRepository evTransactionRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void startConnection(String sessionId, String identifier) {
@@ -97,5 +116,105 @@ public class EVServiceImpl implements EVService {
 
             evChargePointConfigurationRepository.save(evChargePoint);
         }
+    }
+
+    @Override
+    public void chargingStatus(UUID sessionIndex, StatusNotificationRequest request) {
+        log.warn("CONNECTOR ID IGNORED FOR NOW (REQUEST CONNECTOR ID is {})", request.getConnectorId());
+        List<EVConnection> sessions = evConnectionRepository.findAllBySessionId(sessionIndex.toString());
+
+        if (!CollectionUtils.isEmpty(sessions)) {
+            EVChargingStatus bySessionId = evChargingStatusRepository.findBySessionId(sessions.get(0).getId());
+
+            if (Objects.isNull(bySessionId)) {
+                bySessionId = new EVChargingStatus();
+                bySessionId.setCreateTime(LocalDateTime.now());
+                bySessionId.setLastUpdateTime(LocalDateTime.now());
+                bySessionId.setSession(sessions.get(0));
+            } else {
+                bySessionId.setLastUpdateTime(LocalDateTime.now());
+            }
+
+            bySessionId.setStatus(request.getStatus());
+            bySessionId.setErrorCode(request.getErrorCode());
+
+            evChargingStatusRepository.save(bySessionId);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public void meterValues(UUID sessionIndex, MeterValuesRequest request) {
+        log.warn("CONNECTOR ID IGNORED FOR NOW (REQUEST CONNECTOR ID is {})", request.getConnectorId());
+        List<EVConnection> sessions = evConnectionRepository.findAllBySessionId(sessionIndex.toString());
+
+        if (!CollectionUtils.isEmpty(sessions)) {
+            EVMeterValues bySessionId = evMeterValuesRepository.findBySessionId(sessions.get(0).getId());
+
+            if (Objects.isNull(bySessionId)) {
+                bySessionId = new EVMeterValues();
+                bySessionId.setSession(sessions.get(0));
+                bySessionId.setCreateTime(LocalDateTime.now());
+                bySessionId.setLastUpdateTime(LocalDateTime.now());
+            } else {
+                bySessionId.setLastUpdateTime(LocalDateTime.now());
+            }
+
+            String jsonString = objectMapper.writeValueAsString(request.getMeterValue());
+            bySessionId.setMeterValuesJSON(jsonString);
+
+            evMeterValuesRepository.save(bySessionId);
+        }
+    }
+
+    @Override
+    public void startTransaction(UUID sessionIndex, StartTransactionRequest request) {
+        List<EVConnection> sessions = evConnectionRepository.findAllBySessionId(sessionIndex.toString());
+
+        if (!CollectionUtils.isEmpty(sessions)) {
+            EVTransaction evTransaction = new EVTransaction();
+            evTransaction.setSession(sessions.get(0));
+            evTransaction.setCreateTime(LocalDateTime.now());
+            evTransaction.setConnectorId(request.getConnectorId());
+            evTransaction.setIdTag(request.getIdTag());
+            evTransaction.setMeterStart(request.getMeterStart());
+            evTransaction.setReservationId(request.getReservationId());
+            evTransaction.setType(TransactionType.START);
+
+            evTransactionRepository.save(evTransaction);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public void stopTransaction(UUID sessionIndex, StopTransactionRequest request) {
+        List<EVConnection> sessions = evConnectionRepository.findAllBySessionId(sessionIndex.toString());
+
+        if (!CollectionUtils.isEmpty(sessions)) {
+            EVTransaction evTransaction = new EVTransaction();
+            evTransaction.setSession(sessions.get(0));
+            evTransaction.setCreateTime(LocalDateTime.now());
+            evTransaction.setIdTag(request.getIdTag());
+            evTransaction.setMeterStop(request.getMeterStop());
+            evTransaction.setTransactionId(request.getTransactionId());
+            evTransaction.setReason(request.getReason());
+            evTransaction.setType(TransactionType.STOP);
+
+            String transactionDataJsonStr = objectMapper.writeValueAsString(request.getTransactionData());
+            evTransaction.setData(transactionDataJsonStr);
+
+            evTransactionRepository.save(evTransaction);
+        }
+    }
+
+    @Override
+    public void activate() {
+
+        // TODO: jsonServer
+    }
+
+    @Override
+    public void deactivate() {
+        // TODO: jsonServer
     }
 }

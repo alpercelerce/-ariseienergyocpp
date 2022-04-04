@@ -2,13 +2,14 @@ package eu.chargetime.ocpp.jsonclientimplementation;
 
 import eu.chargetime.ocpp.IClientAPI;
 import eu.chargetime.ocpp.JSONClient;
-import eu.chargetime.ocpp.feature.profile.ClientCoreEventHandler;
-import eu.chargetime.ocpp.feature.profile.ClientCoreProfile;
+import eu.chargetime.ocpp.OccurenceConstraintException;
+import eu.chargetime.ocpp.UnsupportedFeatureException;
 import eu.chargetime.ocpp.model.Request;
 import eu.chargetime.ocpp.model.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
+
+import java.time.ZonedDateTime;
 
 /*
  * ChargeTime.eu - Java-OCA-OCPP
@@ -226,4 +227,45 @@ public class JSONClientSample {
         client.disconnect();
     }
 
+    public void meterValues() throws OccurenceConstraintException, UnsupportedFeatureException {
+        SampledValue sampledValue = new SampledValue("123");
+        sampledValue.setFormat(ValueFormat.Raw);
+        sampledValue.setLocation(Location.EV);
+
+        SampledValue sampledValue1 = new SampledValue("1234");
+        sampledValue1.setFormat(ValueFormat.Raw);
+        sampledValue1.setLocation(Location.EV);
+        SampledValue[] sampledValues = new SampledValue[] {sampledValue, sampledValue1};
+
+        MeterValue meterValue = new MeterValue(ZonedDateTime.now(), sampledValues);
+
+        SampledValue sampledValue2 = new SampledValue("12345");
+        sampledValue2.setFormat(ValueFormat.Raw);
+        sampledValue2.setLocation(Location.EV);
+
+        SampledValue sampledValue3 = new SampledValue("123456");
+        sampledValue3.setFormat(ValueFormat.Raw);
+        sampledValue3.setLocation(Location.EV);
+        SampledValue[] sampledValues1 = new SampledValue[] {sampledValue2, sampledValue3};
+        MeterValue meterValue1 = new MeterValue(ZonedDateTime.now(), sampledValues1);
+
+        MeterValue[] meterValues = new MeterValue[] {meterValue1, meterValue};
+
+        MeterValuesRequest request = core.createMeterValuesRequest(1, meterValues);
+        request.setTransactionId(123);
+        client.send(request).whenComplete((s, ex) -> System.out.println(s));
+    }
+
+
+    public void startTransaction() throws OccurenceConstraintException, UnsupportedFeatureException {
+        StartTransactionRequest request = core.createStartTransactionRequest(1, "TEST", 1, ZonedDateTime.now());
+
+        client.send(request).whenComplete((s, ex) -> System.out.println(s));
+    }
+
+    public void stopTransaction() throws OccurenceConstraintException, UnsupportedFeatureException {
+        StopTransactionRequest request = core.createStopTransactionRequest(2, ZonedDateTime.now(), 12);
+
+        client.send(request).whenComplete((s, ex) -> System.out.println(s));
+    }
 }

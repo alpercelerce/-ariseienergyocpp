@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class ApplicationConfiguration {
 
-    @Value("${server.port}")
+    @Value("${server.ws.port}")
     private Integer serverPort;
 
-    @Value("${server.address}")
+    @Value("${server.ws.address}")
     private String serverAddress;
 }

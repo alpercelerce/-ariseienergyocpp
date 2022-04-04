@@ -1,6 +1,5 @@
 package eu.chargetime.ocpp.jsonclientimplementation;
 
-import eu.chargetime.ocpp.feature.profile.ClientCoreEventHandler;
 import eu.chargetime.ocpp.feature.profile.ClientCoreProfile;
 import eu.chargetime.ocpp.model.core.BootNotificationRequest;
 

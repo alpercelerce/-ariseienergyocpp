@@ -30,6 +30,24 @@ public class SchedulerService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            jsonClientSample.meterValues();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            jsonClientSample.startTransaction();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            jsonClientSample.stopTransaction();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Scheduled(fixedRateString ="${console.fetchMetrics}", initialDelay=1000)
