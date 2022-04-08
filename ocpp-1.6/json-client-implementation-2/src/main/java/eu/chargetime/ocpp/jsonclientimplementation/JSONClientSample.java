@@ -194,25 +194,109 @@ public class JSONClientSample {
     }
 
     public void meterValues() throws OccurenceConstraintException, UnsupportedFeatureException {
-        SampledValue sampledValue = new SampledValue("123");
-        sampledValue.setFormat(ValueFormat.Raw);
-        sampledValue.setLocation(Location.EV);
+        SampledValue sampledCurrentImport = new SampledValue("123");
+        sampledCurrentImport.setFormat(ValueFormat.Raw);
+        sampledCurrentImport.setLocation(Location.EV);
+        sampledCurrentImport.setMeasurand("Current.Import");
 
-        SampledValue sampledValue1 = new SampledValue("1234");
-        sampledValue1.setFormat(ValueFormat.Raw);
-        sampledValue1.setLocation(Location.EV);
-        SampledValue[] sampledValues = new SampledValue[] {sampledValue, sampledValue1};
+        SampledValue sampledCurrentExport = new SampledValue("112");
+        sampledCurrentExport.setFormat(ValueFormat.Raw);
+        sampledCurrentExport.setLocation(Location.EV);
+        sampledCurrentExport.setMeasurand("Current.Export");
+
+        SampledValue sampledCurrentOffered = new SampledValue("1234");
+        sampledCurrentOffered.setFormat(ValueFormat.Raw);
+        sampledCurrentOffered.setLocation(Location.EV);
+        sampledCurrentOffered.setMeasurand("Current.Offered");
+
+        SampledValue sampledPowerActiveExport = new SampledValue("1134");
+        sampledPowerActiveExport.setFormat(ValueFormat.Raw);
+        sampledPowerActiveExport.setLocation(Location.EV);
+        sampledPowerActiveExport.setMeasurand("Power.Active.Export");
+
+        SampledValue sampledPowerActiveImport = new SampledValue("1114");
+        sampledPowerActiveImport.setFormat(ValueFormat.Raw);
+        sampledPowerActiveImport.setLocation(Location.EV);
+        sampledPowerActiveImport.setMeasurand("Power.Active.Import");
+
+        SampledValue sampledPowerFactor = new SampledValue("11343");
+        sampledPowerFactor.setFormat(ValueFormat.Raw);
+        sampledPowerFactor.setLocation(Location.EV);
+        sampledPowerFactor.setMeasurand("Power.Factor");
+
+        SampledValue sampledPowerOffered = new SampledValue("1123414");
+        sampledPowerOffered.setFormat(ValueFormat.Raw);
+        sampledPowerOffered.setLocation(Location.EV);
+        sampledPowerOffered.setMeasurand("Power.Offered");
+
+        SampledValue sampledVoltage = new SampledValue("994");
+        sampledVoltage.setFormat(ValueFormat.Raw);
+        sampledVoltage.setLocation(Location.EV);
+        sampledVoltage.setMeasurand("Voltage");
+
+        SampledValue[] sampledValues = new SampledValue[] {
+                sampledCurrentImport,
+                sampledCurrentExport,
+                sampledCurrentOffered,
+                sampledPowerActiveExport,
+                sampledPowerActiveImport,
+                sampledPowerFactor,
+                sampledPowerOffered,
+                sampledVoltage
+        };
 
         MeterValue meterValue = new MeterValue(ZonedDateTime.now(), sampledValues);
 
-        SampledValue sampledValue2 = new SampledValue("12345");
-        sampledValue2.setFormat(ValueFormat.Raw);
-        sampledValue2.setLocation(Location.EV);
+        SampledValue sampledCurrentImport1 = new SampledValue("9123");
+        sampledCurrentImport1.setFormat(ValueFormat.Raw);
+        sampledCurrentImport1.setLocation(Location.EV);
+        sampledCurrentImport1.setMeasurand("Current.Import");
 
-        SampledValue sampledValue3 = new SampledValue("123456");
-        sampledValue3.setFormat(ValueFormat.Raw);
-        sampledValue3.setLocation(Location.EV);
-        SampledValue[] sampledValues1 = new SampledValue[] {sampledValue2, sampledValue3};
+        SampledValue sampledCurrentExport1 = new SampledValue("9112");
+        sampledCurrentExport1.setFormat(ValueFormat.Raw);
+        sampledCurrentExport1.setLocation(Location.EV);
+        sampledCurrentExport1.setMeasurand("Current.Export");
+
+        SampledValue sampledCurrentOffered1 = new SampledValue("91234");
+        sampledCurrentOffered1.setFormat(ValueFormat.Raw);
+        sampledCurrentOffered1.setLocation(Location.EV);
+        sampledCurrentOffered1.setMeasurand("Current.Offered");
+
+        SampledValue sampledPowerActiveExport1 = new SampledValue("91134");
+        sampledPowerActiveExport1.setFormat(ValueFormat.Raw);
+        sampledPowerActiveExport1.setLocation(Location.EV);
+        sampledPowerActiveExport1.setMeasurand("Power.Active.Export");
+
+        SampledValue sampledPowerActiveImport1 = new SampledValue("91114");
+        sampledPowerActiveImport1.setFormat(ValueFormat.Raw);
+        sampledPowerActiveImport1.setLocation(Location.EV);
+        sampledPowerActiveImport1.setMeasurand("Power.Active.Export");
+
+        SampledValue sampledPowerFactor1 = new SampledValue("911343");
+        sampledPowerFactor1.setFormat(ValueFormat.Raw);
+        sampledPowerFactor1.setLocation(Location.EV);
+        sampledPowerFactor1.setMeasurand("Power.Factor");
+
+        SampledValue sampledPowerOffered1 = new SampledValue("9123414");
+        sampledPowerOffered1.setFormat(ValueFormat.Raw);
+        sampledPowerOffered1.setLocation(Location.EV);
+        sampledPowerOffered1.setMeasurand("Power.Offered");
+
+        SampledValue sampledVoltage1 = new SampledValue("9994");
+        sampledVoltage1.setFormat(ValueFormat.Raw);
+        sampledVoltage1.setLocation(Location.EV);
+        sampledVoltage1.setMeasurand("Voltage");
+
+        SampledValue[] sampledValues1 = new SampledValue[] {
+                sampledCurrentImport1,
+                sampledCurrentExport1,
+                sampledCurrentOffered1,
+                sampledPowerActiveExport1,
+                sampledPowerActiveImport1,
+                sampledPowerFactor1,
+                sampledPowerOffered1,
+                sampledVoltage1
+        };
         MeterValue meterValue1 = new MeterValue(ZonedDateTime.now(), sampledValues1);
 
         MeterValue[] meterValues = new MeterValue[] {meterValue1, meterValue};
