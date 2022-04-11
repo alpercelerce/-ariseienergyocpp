@@ -16,11 +16,7 @@ import eu.chargetime.ocpp.jsonserverimplementation.repository.EVTransactionRepos
 import eu.chargetime.ocpp.jsonserverimplementation.service.EVService;
 import eu.chargetime.ocpp.jsonserverimplementation.type.ConnectionStatus;
 import eu.chargetime.ocpp.jsonserverimplementation.type.TransactionType;
-import eu.chargetime.ocpp.model.core.BootNotificationRequest;
-import eu.chargetime.ocpp.model.core.MeterValuesRequest;
-import eu.chargetime.ocpp.model.core.StartTransactionRequest;
-import eu.chargetime.ocpp.model.core.StatusNotificationRequest;
-import eu.chargetime.ocpp.model.core.StopTransactionRequest;
+import eu.chargetime.ocpp.model.core.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -216,5 +212,15 @@ public class EVServiceImpl implements EVService {
     @Override
     public void deactivate() {
         // TODO: jsonServer
+    }
+
+    @Override
+    public ResetConfirmation reset() {
+        return null;
+    }
+
+    @Override
+    public GetConfigurationConfirmation getConfiguration() {
+        return null;
     }
 }

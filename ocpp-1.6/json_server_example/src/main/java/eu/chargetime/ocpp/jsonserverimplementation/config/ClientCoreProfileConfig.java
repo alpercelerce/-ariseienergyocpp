@@ -36,7 +36,14 @@ public class ClientCoreProfileConfig {
 
             @Override
             public GetConfigurationConfirmation handleGetConfigurationRequest(GetConfigurationRequest getConfigurationRequest) {
-                return null;
+                System.out.println("handleGetConfigurationRequest !");
+                System.out.println(getConfigurationRequest);
+                // ... handle event
+
+                GetConfigurationConfirmation getConfigurationConfirmation = new GetConfigurationConfirmation();
+
+                logger.info("GET CONFIGURATION CONFIRMATION = {}", getConfigurationConfirmation);
+                return getConfigurationConfirmation; // returning null means unsupported feature
             }
 
             @Override
@@ -66,7 +73,7 @@ public class ClientCoreProfileConfig {
 
             @Override
             public ResetConfirmation handleResetRequest(ResetRequest resetRequest) {
-                System.out.println("Reset !");
+                System.out.println("handleResetRequest !");
                 System.out.println(resetRequest);
                 // ... handle event
 

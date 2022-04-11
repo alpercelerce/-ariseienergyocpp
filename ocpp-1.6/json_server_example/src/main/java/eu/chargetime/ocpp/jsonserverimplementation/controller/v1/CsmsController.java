@@ -1,6 +1,8 @@
 package eu.chargetime.ocpp.jsonserverimplementation.controller.v1;
 
 import eu.chargetime.ocpp.jsonserverimplementation.service.EVService;
+import eu.chargetime.ocpp.model.core.GetConfigurationConfirmation;
+import eu.chargetime.ocpp.model.core.ResetConfirmation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,18 @@ public class CsmsController {
     @GetMapping("deactivate")
     public void deactivate() {
         log.info("Retrieve deactivate request from iEnergy CSMS !");
-
         evService.deactivate();
+    }
+
+    @GetMapping("reset")
+    public ResetConfirmation reset() {
+        log.info("Reset request from iEnergy CSMS !");
+        return evService.reset();
+    }
+
+    @GetMapping("getConfiguration")
+    public GetConfigurationConfirmation getConfiguration() {
+        log.info("GetConfiguration request from iEnergy CSMS !");
+        return evService.getConfiguration();
     }
 }

@@ -1,10 +1,6 @@
 package eu.chargetime.ocpp.jsonserverimplementation.service;
 
-import eu.chargetime.ocpp.model.core.BootNotificationRequest;
-import eu.chargetime.ocpp.model.core.MeterValuesRequest;
-import eu.chargetime.ocpp.model.core.StartTransactionRequest;
-import eu.chargetime.ocpp.model.core.StatusNotificationRequest;
-import eu.chargetime.ocpp.model.core.StopTransactionRequest;
+import eu.chargetime.ocpp.model.core.*;
 
 import java.util.UUID;
 
@@ -28,4 +24,8 @@ public interface EVService {
     void activate();
 
     void deactivate();
+
+    ResetConfirmation reset();
+
+    GetConfigurationConfirmation getConfiguration();
 }
