@@ -6,6 +6,8 @@ import eu.chargetime.ocpp.model.core.ResetConfirmation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,15 +30,15 @@ public class CsmsController {
         evService.deactivate();
     }
 
-    @GetMapping("reset")
-    public ResetConfirmation reset() {
+    @GetMapping("reset/{sessionId}")
+    public ResetConfirmation reset(@PathVariable String sessionId) {
         log.info("Reset request from iEnergy CSMS !");
-        return evService.reset();
+        return evService.reset(sessionId);
     }
 
-    @GetMapping("getConfiguration")
-    public GetConfigurationConfirmation getConfiguration() {
+    @GetMapping("getConfiguration/{sessionId}")
+    public GetConfigurationConfirmation getConfiguration(@PathVariable String sessionId) {
         log.info("GetConfiguration request from iEnergy CSMS !");
-        return evService.getConfiguration();
+        return evService.getConfiguration(sessionId);
     }
 }

@@ -25,7 +25,7 @@ public interface EVService {
 
     void deactivate();
 
-    ResetConfirmation reset();
+    ResetConfirmation reset(String sessionID);
 
-    GetConfigurationConfirmation getConfiguration();
+    GetConfigurationConfirmation getConfiguration(String sessionID);
 }

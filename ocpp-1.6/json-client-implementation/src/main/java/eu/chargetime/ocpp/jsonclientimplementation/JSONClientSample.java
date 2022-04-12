@@ -68,8 +68,23 @@ public class JSONClientSample {
 
                 System.out.println(request);
                 // ... handle event
+                GetConfigurationConfirmation getConfigurationConfirmation = new GetConfigurationConfirmation();
+                KeyValueType keyValueType1 = new KeyValueType();
+                keyValueType1.setKey("Test 1");
+                keyValueType1.setValue("ienergy");
+                keyValueType1.setReadonly(true);
 
-                return null; // returning null means unsupported feature
+                KeyValueType keyValueType2 = new KeyValueType();
+                keyValueType2.setKey("Test 3");
+                keyValueType2.setValue("ienergy Test");
+                keyValueType2.setReadonly(false);
+
+                KeyValueType[] keyValueType = new KeyValueType[] {keyValueType1, keyValueType2};
+
+                getConfigurationConfirmation.setConfigurationKey(keyValueType);
+                getConfigurationConfirmation.setUnknownKey(new String[]{"unknown1", "unknown2", "unknown3"});
+
+                return getConfigurationConfirmation;  // returning null means unsupported feature
             }
 
             @Override
@@ -158,7 +173,7 @@ public class JSONClientSample {
                 System.out.println(request);
                 // ... handle event
 
-                return null; // returning null means unsupported feature
+                return new ResetConfirmation(ResetStatus.Accepted); // returning null means unsupported feature
             }
 
             @Override

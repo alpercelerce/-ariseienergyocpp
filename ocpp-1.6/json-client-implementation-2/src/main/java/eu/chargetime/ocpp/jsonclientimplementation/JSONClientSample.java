@@ -70,7 +70,23 @@ public class JSONClientSample {
                 System.out.println(request);
                 // ... handle event
 
-                return null; // returning null means unsupported feature
+                GetConfigurationConfirmation getConfigurationConfirmation = new GetConfigurationConfirmation();
+                KeyValueType keyValueType1 = new KeyValueType();
+                keyValueType1.setKey("Test 2");
+                keyValueType1.setValue("ienergy --");
+                keyValueType1.setReadonly(true);
+
+                KeyValueType keyValueType2 = new KeyValueType();
+                keyValueType2.setKey("Test 5");
+                keyValueType2.setValue("ienergy Test111");
+                keyValueType2.setReadonly(false);
+
+                KeyValueType[] keyValueType = new KeyValueType[] {keyValueType1, keyValueType2};
+
+                getConfigurationConfirmation.setConfigurationKey(keyValueType);
+                getConfigurationConfirmation.setUnknownKey(new String[]{"unknown4", "unknown5", "unknown6"});
+
+                return getConfigurationConfirmation;  // returning null means unsupported feature
             }
 
             @Override
@@ -137,7 +153,7 @@ public class JSONClientSample {
                 System.out.println(request);
                 // ... handle event
 
-                return null; // returning null means unsupported feature
+                return new ResetConfirmation(ResetStatus.Rejected); // returning null means unsupported feature
             }
 
             @Override
@@ -153,7 +169,7 @@ public class JSONClientSample {
             }
         });
         client = new JSONClient(core, "OCCPLocalClinetIdentity2");
-        client.connect("ws://20.107.186.160:8887", null);
+        client.connect("ws://localhost:8887", null);
 
         logger.info("connect - " + "finished");
     }

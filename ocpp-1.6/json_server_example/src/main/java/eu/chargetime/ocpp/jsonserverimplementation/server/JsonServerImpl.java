@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class JsonServerImpl {
 
     private static final Logger logger = LoggerFactory.getLogger(JsonServerImpl.class);
@@ -21,6 +20,15 @@ public class JsonServerImpl {
     private final ServerEvents serverEvents;
     private final JSONServer server;
     private final ApplicationConfiguration applicationConfiguration;
+
+    public JsonServerImpl(
+            ServerEvents serverEvents,
+            JSONServer server,
+            ApplicationConfiguration applicationConfiguration) {
+        this.serverEvents = serverEvents;
+        this.server = server;
+        this.applicationConfiguration = applicationConfiguration;
+    }
 
     @PostConstruct
     public void startServer() {

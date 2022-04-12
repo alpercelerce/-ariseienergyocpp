@@ -1,6 +1,7 @@
 package eu.chargetime.ocpp.jsonserverimplementation.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.chargetime.ocpp.JSONServer;
 import eu.chargetime.ocpp.jsonserverimplementation.entity.EVChargePointConfiguration;
 import eu.chargetime.ocpp.jsonserverimplementation.entity.EVChargingStatus;
 import eu.chargetime.ocpp.jsonserverimplementation.entity.EVConnection;
@@ -16,10 +17,12 @@ import eu.chargetime.ocpp.jsonserverimplementation.repository.EVTransactionRepos
 import eu.chargetime.ocpp.jsonserverimplementation.service.EVService;
 import eu.chargetime.ocpp.jsonserverimplementation.type.ConnectionStatus;
 import eu.chargetime.ocpp.jsonserverimplementation.type.TransactionType;
+import eu.chargetime.ocpp.model.Confirmation;
 import eu.chargetime.ocpp.model.core.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.support.AbstractBeanFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -27,9 +30,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class EVServiceImpl implements EVService {
     private final EVConnectionRepository evConnectionRepository;
@@ -39,6 +43,18 @@ public class EVServiceImpl implements EVService {
     private final EVMeterValuesRepository evMeterValuesRepository;
     private final EVTransactionRepository evTransactionRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private JSONServer jsonServer;
+    private final AbstractBeanFactory abstractBeanFactory;
+
+    public EVServiceImpl(EVConnectionRepository evConnectionRepository, EVHeartBeatRepository evHeartBeatRepository, EVChargePointConfigurationRepository evChargePointConfigurationRepository, EVChargingStatusRepository evChargingStatusRepository, EVMeterValuesRepository evMeterValuesRepository, EVTransactionRepository evTransactionRepository, AbstractBeanFactory beanFactory) {
+        this.evConnectionRepository = evConnectionRepository;
+        this.evHeartBeatRepository = evHeartBeatRepository;
+        this.evChargePointConfigurationRepository = evChargePointConfigurationRepository;
+        this.evChargingStatusRepository = evChargingStatusRepository;
+        this.evMeterValuesRepository = evMeterValuesRepository;
+        this.evTransactionRepository = evTransactionRepository;
+        this.abstractBeanFactory = beanFactory;
+    }
 
     @Override
     public void startConnection(String sessionId, String identifier) {
@@ -46,13 +62,13 @@ public class EVServiceImpl implements EVService {
 
         if (Objects.isNull(connection)) {
             connection = new EVConnection();
-            connection.setConnectionStatus(ConnectionStatus.OPEN);
-            connection.setSessionId(sessionId);
             connection.setCreateTime(LocalDateTime.now());
             connection.setIdentifier(identifier);
-        } else {
-            connection.setConnectionStatus(ConnectionStatus.OPEN);
         }
+
+        connection.setUpdateTime(LocalDateTime.now());
+        connection.setConnectionStatus(ConnectionStatus.OPEN);
+        connection.setSessionId(sessionId);
 
         evConnectionRepository.save(connection);
     }
@@ -205,7 +221,6 @@ public class EVServiceImpl implements EVService {
 
     @Override
     public void activate() {
-
         // TODO: jsonServer
     }
 
@@ -214,13 +229,27 @@ public class EVServiceImpl implements EVService {
         // TODO: jsonServer
     }
 
+    @SneakyThrows
     @Override
-    public ResetConfirmation reset() {
-        return null;
+    public ResetConfirmation reset(String sessionID) {
+        this.jsonServer = (JSONServer) abstractBeanFactory.getBean("jsonServer");
+        ResetRequest resetRequest = new ResetRequest(ResetType.Hard);
+
+        CompletionStage<Confirmation> send = jsonServer.send(UUID.fromString(sessionID), resetRequest);
+        Confirmation join = send.toCompletableFuture().join();
+
+        return (ResetConfirmation) join;
     }
 
+    @SneakyThrows
     @Override
-    public GetConfigurationConfirmation getConfiguration() {
-        return null;
+    public GetConfigurationConfirmation getConfiguration(String sessionID) {
+        this.jsonServer = (JSONServer) abstractBeanFactory.getBean("jsonServer");
+        GetConfigurationRequest getConfigurationRequest = new GetConfigurationRequest();
+
+        CompletionStage<Confirmation> send = jsonServer.send(UUID.fromString(sessionID), getConfigurationRequest);
+        Confirmation join = send.toCompletableFuture().join();
+
+        return (GetConfigurationConfirmation) join;
     }
 }
