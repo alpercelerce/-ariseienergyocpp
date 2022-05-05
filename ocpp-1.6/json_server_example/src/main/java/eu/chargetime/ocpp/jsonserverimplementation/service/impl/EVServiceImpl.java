@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -64,11 +65,13 @@ public class EVServiceImpl implements EVService {
             connection = new EVConnection();
             connection.setCreateTime(LocalDateTime.now());
             connection.setIdentifier(identifier);
+            connection.setCount(1);
         }
 
         connection.setUpdateTime(LocalDateTime.now());
         connection.setConnectionStatus(ConnectionStatus.OPEN);
         connection.setSessionId(sessionId);
+        connection.setCount(connection.getCount() + 1);
 
         evConnectionRepository.save(connection);
     }
@@ -79,6 +82,8 @@ public class EVServiceImpl implements EVService {
 
         connections.forEach(c -> {
             c.setConnectionStatus(ConnectionStatus.CLOSED);
+            long activeMinute = ChronoUnit.MINUTES.between(LocalDateTime.now(), c.getUpdateTime());
+            c.setActiveMinute(c.getActiveMinute() + activeMinute);
             c.setUpdateTime(LocalDateTime.now());
         });
 
@@ -144,6 +149,23 @@ public class EVServiceImpl implements EVService {
                 bySessionId.setLastUpdateTime(LocalDateTime.now());
                 bySessionId.setSession(sessions.get(0));
             } else {
+                if (Objects.nonNull(bySessionId.getStatus()) && bySessionId.getStatus().equals(ChargePointStatus.Charging) && !request.getStatus().equals(ChargePointStatus.Charging)) {
+                    long activeMinute = ChronoUnit.MINUTES.between(LocalDateTime.now(), bySessionId.getLastUpdateTime());
+                    List<EVChargePointConfiguration> chargePoints = evChargePointConfigurationRepository.findAllBySessionId(sessions.get(0).getId());
+                    EVChargePointConfiguration chargePoint = chargePoints.get(0);
+
+                    chargePoint.setChargingMinutes(chargePoint.getChargingMinutes() + activeMinute);
+
+                    evChargePointConfigurationRepository.save(chargePoint);
+                } else if (Objects.nonNull(bySessionId.getStatus()) && bySessionId.getStatus().equals(ChargePointStatus.Preparing) && !request.getStatus().equals(ChargePointStatus.Preparing)) {
+                    long activeMinute = ChronoUnit.MINUTES.between(LocalDateTime.now(), bySessionId.getLastUpdateTime());
+                    List<EVChargePointConfiguration> chargePoints = evChargePointConfigurationRepository.findAllBySessionId(sessions.get(0).getId());
+                    EVChargePointConfiguration chargePoint = chargePoints.get(0);
+
+                    chargePoint.setPreparingMinutes(chargePoint.getPreparingMinutes() + activeMinute);
+
+                    evChargePointConfigurationRepository.save(chargePoint);
+                }
                 bySessionId.setLastUpdateTime(LocalDateTime.now());
             }
 

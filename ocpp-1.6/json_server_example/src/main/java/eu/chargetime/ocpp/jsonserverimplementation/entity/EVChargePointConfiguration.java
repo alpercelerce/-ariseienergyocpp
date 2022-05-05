@@ -35,4 +35,6 @@ public class EVChargePointConfiguration {
     private String imsi;
     private String meterSerialNumber;
     private String meterType;
+    private long preparingMinutes = 0;
+    private long chargingMinutes = 0;
 }

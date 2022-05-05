@@ -35,4 +35,6 @@ public class EVConnection {
 
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private int count = 0;
+    private long activeMinute = 0;
 }
