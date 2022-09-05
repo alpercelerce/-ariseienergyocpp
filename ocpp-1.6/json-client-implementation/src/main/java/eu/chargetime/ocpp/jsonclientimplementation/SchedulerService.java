@@ -1,5 +1,6 @@
 package eu.chargetime.ocpp.jsonclientimplementation;
 
+import eu.chargetime.ocpp.jsonclientimplementation.config.ApiConfigurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,9 +11,11 @@ public class SchedulerService {
 
     private static final Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
-    private JSONClientSample jsonClientSample = new JSONClientSample();
+    private final JSONClientSample jsonClientSample;
 
-    public SchedulerService () {
+    public SchedulerService (ApiConfigurations apiConfigurations) {
+        jsonClientSample = new JSONClientSample(apiConfigurations);
+
         try {
             jsonClientSample.connect();
         } catch (Exception e) {

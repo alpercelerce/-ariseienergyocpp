@@ -1,4 +1,4 @@
 websocket:
-  url: "${WEB_SOCKET_URL:localhost:8080}"
+  url: "${WEB_SOCKET_URL:localhost:8887}"
 console:
   fetchMetrics: 6000

@@ -5,6 +5,7 @@ import eu.chargetime.ocpp.JSONClient;
 import eu.chargetime.ocpp.OccurenceConstraintException;
 import eu.chargetime.ocpp.UnsupportedFeatureException;
 import eu.chargetime.ocpp.feature.profile.ClientCoreEventHandler;
+import eu.chargetime.ocpp.jsonclientimplementation.config.ApiConfigurations;
 import eu.chargetime.ocpp.model.Request;
 import eu.chargetime.ocpp.model.core.*;
 import org.slf4j.Logger;
@@ -44,6 +45,11 @@ public class JSONClientSample {
 
     private IClientAPI client;
     private ClientCoreProfileCustom core;
+    private final ApiConfigurations apiConfigurations;
+
+    public JSONClientSample(ApiConfigurations apiConfigurations) {
+        this.apiConfigurations = apiConfigurations;
+    }
 
     public void connect() throws Exception {
 
@@ -169,7 +175,7 @@ public class JSONClientSample {
             }
         });
         client = new JSONClient(core, "OCCPLocalClinetIdentity2");
-        client.connect("ws://localhost:8887", null);
+        client.connect("ws://".concat(apiConfigurations.getWebSocketBaseUrl()), null);
 
         logger.info("connect - " + "finished");
     }
